@@ -4,9 +4,14 @@ import CardMenu from "components/card/CardMenu";
 import Card from "components/card";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
+// const api = axios.create({
+//   baseURL: 'http://localhost:3001/',
+//   withCredentials: true // Ensure cookies are sent with requests
+// });
+
 const api = axios.create({
-  baseURL: 'http://localhost:3001/',
-  withCredentials: true // Ensure cookies are sent with requests
+  baseURL: process.env.REACT_APP_API_BASE_URL,
+  withCredentials: true
 });
 
 // Table Component

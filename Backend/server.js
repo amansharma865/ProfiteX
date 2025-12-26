@@ -14,15 +14,16 @@ const productRoutes = require('./routes/productRoutes');
 const invoiceRoutes = require('./routes/invoiceRoutes');
 const superProductRoutes = require('./routes/superProductRoutes.js');
 const warehouseRoutes = require('./routes/warehouseRoutes.js');
-const notificationRoutes = require('./routes/notificationRoutes.js');
+const notificationRoutes = require('./routes/notificationRoutes.js');S
 const { verifyToken } = require('./middlewares/authorize.js');
 const Razorpay = require("razorpay")
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 require('dotenv').config();
 const allowedOrigins = [
     process.env.ORIGIN_1 || 'http://localhost:3001',
-    process.env.ORIGIN_2 || 'https://profitex-iota.vercel.app',
-    process.env.ORIGIN_3 || 'https://profitex-1jdnonhhj-aryan-pathanias-projects.vercel.app',
+    // process.env.ORIGIN_2 || 'https://profitex-iota.vercel.app',
+    // process.env.ORIGIN_3 || 'https://profitex-1jdnonhhj-aryan-pathanias-projects.vercel.app',
+
 ];
 
 // Middleware to parse JSON requests

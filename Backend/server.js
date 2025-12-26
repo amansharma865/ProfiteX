@@ -20,7 +20,7 @@ const Razorpay = require("razorpay")
 const PORT = process.env.PORT || 3000;
 require('dotenv').config();
 const allowedOrigins = [
-    process.env.ORIGIN_1 || 'http://localhost:3001',
+    'https://profite-x.vercel.app' || 'http://localhost:3001',
     // process.env.ORIGIN_2 || 'https://profitex-iota.vercel.app',
     // process.env.ORIGIN_3 || 'https://profitex-1jdnonhhj-aryan-pathanias-projects.vercel.app',
 

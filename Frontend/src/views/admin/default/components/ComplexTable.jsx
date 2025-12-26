@@ -219,20 +219,20 @@ export default function OrderTable(props) {
   const orderStatus = props.status
   const [sorting, setSorting] = useState([]);
   const [data, setData] = useState([]);
-  const [processingOrders, setProcessingOrders] = useState(new Set()); // Track which orders are being processed
+  const [disabledOrders, setDisabledOrders] = useState({}); // Track disabled orders permanently
 
   useEffect(() => {
     setData([...tableData]);
   }, [tableData]);
 
   const handleAcceptReject = async (orderId, action) => {
-    // Prevent double-click
-    if (processingOrders.has(orderId)) {
-      return; // Already processing this order
+    // Prevent double-click - once disabled, stays disabled
+    if (disabledOrders[orderId]) {
+      return;
     }
 
-    // Mark this order as processing
-    setProcessingOrders(prev => new Set([...prev, orderId]));
+    // Immediately disable the button
+    setDisabledOrders(prev => ({ ...prev, [orderId]: true }));
 
     try {
       const response = await axios.put(
@@ -258,14 +258,9 @@ export default function OrderTable(props) {
       toast.error(serverMessage);
     } catch (err) {
       toast.error(`Error ${action}ing the order.`);
-    } finally {
-      // Remove from processing set (in case of error and no reload)
-      setProcessingOrders(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(orderId);
-        return newSet;
-      });
     }
+    // Note: We do NOT re-enable the button even on error
+    // This prevents double-submission
   };
 
   const fetchOrders = async () => {
@@ -333,30 +328,30 @@ export default function OrderTable(props) {
       header: () => <p className="text-sm font-bold text-gray-600 dark:text-white">ACTION</p>,
       cell: (info) => {
         const order = info.row.original;
-        const isProcessing = processingOrders.has(order.order_id);
+        const isDisabled = disabledOrders[order.order_id];
         return (
           <div className="flex space-x-3">
             {order.status === "pending" ? (
               <>
                 <button
                   onClick={() => handleAcceptReject(order.order_id, "accepted")}
-                  disabled={isProcessing}
-                  className={`flex items-center px-2 py-1 rounded ${isProcessing
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-green-500 hover:bg-green-600'
+                  disabled={isDisabled}
+                  className={`flex items-center px-2 py-1 rounded ${isDisabled
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-green-500 hover:bg-green-600'
                     } text-white`}
                 >
-                  <MdThumbUp className="mr-1" /> {isProcessing ? 'Processing...' : 'Accept'}
+                  <MdThumbUp className="mr-1" /> {isDisabled ? 'Processing...' : 'Accept'}
                 </button>
                 <button
                   onClick={() => handleAcceptReject(order.order_id, "rejected")}
-                  disabled={isProcessing}
-                  className={`flex items-center px-2 py-1 rounded ${isProcessing
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-red-500 hover:bg-red-600'
+                  disabled={isDisabled}
+                  className={`flex items-center px-2 py-1 rounded ${isDisabled
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-red-500 hover:bg-red-600'
                     } text-white`}
                 >
-                  <MdThumbDown className="mr-1" /> {isProcessing ? 'Processing...' : 'Reject'}
+                  <MdThumbDown className="mr-1" /> {isDisabled ? 'Processing...' : 'Reject'}
                 </button>
               </>
             ) : (

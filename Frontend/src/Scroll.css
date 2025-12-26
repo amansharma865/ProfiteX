@@ -1,0 +1,33 @@
+/* Default scrollbar styles */
+*::-webkit-scrollbar {
+  height: 13px;
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  border-radius: 2px;
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-track:hover {
+  background-color: transparent;
+}
+
+/* *::-webkit-scrollbar-track:active {
+  background-color: #422afb;
+} */
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #00ab06;
+  /* border: 2px inset #7968fb; */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #00ab06;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: #00ab06;
+}
+
